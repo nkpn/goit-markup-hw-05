@@ -13,6 +13,9 @@ html{
   --main-bg-color:#E5E5E5;
   --primary-bg-color:#F5F4FA;
   --blue-bg-color:#2196F3;
+
+  --animation-duration: 250ms ;
+  --animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
@@ -48,14 +51,11 @@ li{
 
  a:hover, address:hover
  li:focus, a:focus, address:focus{
-  /*text-decoration: underline;*/
+  transition-property: color;
+  transition-duration: var(--animation-duration);
+  transition-timing-function: var(--animation-timing-function);
   text-decoration-color: #2196F3; 
 }
-
-/* Не работает убирание подчеркивания у эмейла и телефона
-.no-decoration:hover{
-  text-decoration: none;
-}*/
 
 
 .container{
@@ -76,15 +76,13 @@ li{
   line-height: 16px;
 }
 
-.site-nav .item:not(:last-child){
-  padding-right: 50px;
-}
+
 
 header{
   background: #FFFFFF;
   border-bottom: 2px solid #ECECEC;
-  padding: 25px 0;
 }
+
 
 header> .container{
  background: #FFFFFF;
@@ -98,26 +96,76 @@ header> .container{
   align-items: center;
 }
 
-.main-nav .link:hover,
-.main-nav .link:focus{
+.nav-item .link:hover,
+.nav-item .link:focus{
+  transition-property: color;
+  transition-duration: var(--animation-duration);
+  transition-timing-function: var(--animation-timing-function);
   color:var(--blue-bg-color);
 }
 
-.blue-line::after{
+/*.main-nav .link a:hover,
+.main-nav .link a:focus{
+  
+  color: #2196F3;
+  cursor: pointer;
+}*/
+
+/*.auth-nav .link:focus,
+.auth-nav .link:hover{
+  transition-property: color;
+  transition-duration: var(--animation-duration);
+  transition-timing-function: var(--animation-timing-function);
+  color:var(--blue-bg-color);
+}*/
+
+.nav-item{
+  position: relative;
+  margin-right: 50px;
+  padding: 32px 0;
+}
+
+.nav-item:last-child{
+  margin-right: 0px;
+}
+
+
+
+.nav-link::after{
+  content: "";
   position: absolute;
   display: inline-block;
-  bottom: 0px;
+  bottom: 0;
   left: 0;
-  content: "";
   width: 100%;
-  height: 5px;
+  height: 4px;
   border-radius: 2px;
-  border-bottom-color: var(--blue-bg-color);
+  background-color: var(--blue-bg-color);
+  opacity: 0;
+  
+  transform: scaleX(0);
+  /*transition: opacity 250ms linear;*/
+  transition-property: transform;
+  transition-duration: var(--animation-duration);
+  transition-timing-function: var(--animation-timing-function);
+  /*opacity: 250ms var(--animation-timing-function);*/
+  
 }
 
-.auth-nav .link:focus,
-.auth-nav .link:hover{
-  color:var(--blue-bg-color);
+.current::after,
+.nav-link:hover::after,
+.nav-link:focus::after{
+  content: "";
+  position: absolute;
+  display: inline-block;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background-color: var(--blue-bg-color);
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 .logo{
@@ -153,16 +201,6 @@ header> .container{
   letter-spacing: 0.02em;
 }
 
-.main-nav .link a:hover,
-.main-nav .link a:focus{
-  color: #2196F3;
-  cursor: pointer;
-}
-
-.site-nav .link.current{
-  color:var(--blue-bg-color);
-}
-
 .auth-nav{
   display: inline-flex;
 }
@@ -173,6 +211,11 @@ header> .container{
 
 .auth-nav .address-header:hover,      
 .auth-nav .address-header:focus{
+  /*transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1);*/
+  transition-property: color;
+  transition-duration: var(--animation-duration);
+  transition-timing-function: var(--animation-timing-function);
+  
   color:var(--blue-bg-color);
   fill:var(--blue-bg-color);
 }
@@ -228,7 +271,11 @@ header> .container{
 }
 
 .h1-section .overlay{
+  max-width: 1600px;
   padding: 0 auto;
+  margin: 0 auto;
+  position: relative;
+  text-align: center;
 }
 
 .overlay{
@@ -240,12 +287,13 @@ header> .container{
   url(../images/hero.png);
   max-width:1600px;
   height: 600px;
-  /*margin: 0 auto;*/
   background-size: cover;
   background-position: center;
+  text-align: center;
 }
 
 .h1-section-title{
+  display: block;
   font-family: Roboto;
   font-weight: 900;
   font-size: 44px;
@@ -253,13 +301,15 @@ header> .container{
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #FFFFFF;
+  width: 696px;
+  text-align: center;
+  justify-content: center;
 }
 
 .heading-container{
   width: 696px;
   margin: 0 auto;
 }
-
 
 .button-order{
   background: #2196F3;
@@ -283,6 +333,60 @@ header> .container{
 }
 
 
+/* MODAL Window*/
+
+.backdrop{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  transition-property: opacity;
+  transition-duration: var(--animation-duration);
+  transition-timing-function: var(--animation-timing-function);
+}
+
+.backdrop.is-hidden{
+  opacity: 0;
+  pointer-events: none;
+}
+
+.backdrop.is-hidden .modal{
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.modal{
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  min-width: 528px;
+  min-height: 581px;
+  background-color: #ffffff;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 1px rgba(0, 0, 0, 0.14), 0px 2px 1px rgba(0, 0, 0, 0.2);
+  transform: translateX(-50%) translateY(-50%);
+  transition: transform var(--animation-duration) var(--animation-timing-function));
+}
+
+.modal-button{
+  display: flex;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color:#ffffff;
+  cursor: pointer;
+
+}
 
 /* Features section */
 
@@ -369,6 +473,7 @@ header> .container{
 .what-are-we-doing .container{
   display: flex;
   flex-direction: column;
+  position: relative;
 }
  
 .h2-title{
@@ -456,6 +561,11 @@ header> .container{
 
 .master-links:focus,
 .master-links:hover{
+  /*transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);*/
+  transition-property: background-color;
+  transition-duration: var(--animation-duration);
+  transition-timing-function: var(--animation-timing-function);
+
   background-color:var(--blue-bg-color);
   fill: #ffffff;
 }
@@ -596,6 +706,12 @@ header> .container{
 .customers-item:focus,
 .customers-item:hover{
   cursor: pointer;
+
+  /*transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1);*/
+  transition-property: color;
+  transition-duration: var(--animation-duration);
+  transition-timing-function: var(--animation-timing-function);
+
   color: var(--blue-bg-color);
   border: 1px solid var(--blue-bg-color);
   box-sizing: border-box;
@@ -616,7 +732,6 @@ header> .container{
 
 
 .customers-icon{
-
   fill: currentColor;
   background-position: center;
 }
@@ -675,6 +790,9 @@ header> .container{
 
 .primary-button:hover,
 .primary-button:focus{
+  transition-property: background-color;
+  transition-duration: var(--animation-duration);
+  transition-timing-function: var(--animation-timing-function);
   background-color: var(--blue-bg-color);
   color:#ffffff;
   box-shadow: 0px 3px 1px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.08), 0px 2px 2px rgba(0, 0, 0, 0.12);
@@ -749,4 +867,25 @@ header> .container{
   font-weight: bold;
 }
 
+.backdrop{
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: var(--main-text-color);
+  opacity: 0.5;
+}
+
+.modal{
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hidden{
+  opacity: 0;
+  pointer-events: none;
+}
 
