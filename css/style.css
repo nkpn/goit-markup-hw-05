@@ -511,7 +511,6 @@ header> .container{
   height: 70px;
   background: rgba(47, 48, 58, 0.8);
   bottom: 0;
-  padding: 0 auto;
 }
 
 .thumb h3{
@@ -876,6 +875,36 @@ color: #FFFFFF;
   border: 1px solid #EEEEEE;
 }
 
+.photo-master{
+  position: relative;
+  overflow: hidden;
+}
+
+.portfolio-thumb{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  padding: 63px 24px;
+  background-color: rgba(33, 150, 243, 0.9);
+  transform: translateY(100%);
+  transition-property: transform;
+  transition-duration: var(--animation-duration);
+  transition-timing-function: var(--animation-timing-function);
+}
+
+.project-link:hover .portfolio-thumb,
+.project-link:focus .portfolio-thumb{
+  transform: translateY(0)
+}
+
+.portfolio-thumb p{
+  font-size: 18px;
+  line-height: 1.56;
+  color: white;
+}
+
 .project-items-text{
   font-size: 16px;
   line-height: 1.87;
@@ -888,6 +917,9 @@ color: #FFFFFF;
   line-height: 2;
   font-weight: bold;
 }
+
+
+/* Modal and backdrop */ 
 
 .backdrop{
   position: fixed;
